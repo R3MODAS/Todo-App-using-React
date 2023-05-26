@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 // To get the Data from Local Storage
 const getLocalItems = () => {
     let list = localStorage.getItem('lists');
-    console.log(list);
 
     if (list) {
         return JSON.parse(localStorage.getItem('lists'));
