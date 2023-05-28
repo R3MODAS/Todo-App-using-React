@@ -22,7 +22,6 @@ li{
 }
 
 .container{
-  min-width: 360px;
   border: 1px solid white;
   border-radius: 8px;
   min-height: 600px;
