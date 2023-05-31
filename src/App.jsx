@@ -3,6 +3,8 @@ import { AiOutlinePlusCircle, AiTwotoneDelete, AiFillCheckCircle } from "react-i
 import { BsTrash3Fill } from "react-icons/bs"
 
 function App() {
+
+  // Getting Item from LocalStorage
   const getItem = () => {
     const list = localStorage.getItem("todo");
 
@@ -39,6 +41,7 @@ function App() {
   // Deletes the Task
   const handleDelete = (id) => {
     setTodoList(TodoList.filter((task) => task.id !== id));
+    localStorage.setItem("todo", JSON.stringify(TodoList));
   }
 
   // Marks if one Task is Done
