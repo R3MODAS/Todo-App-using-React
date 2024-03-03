@@ -8,74 +8,78 @@ import { BsTrash3Fill } from "react-icons/bs";
 import { RiEditCircleLine } from "react-icons/ri";
 
 function Todo() {
-
-  // To Get the Data from localStorage
-  const getLocalData = () => {
-    const todolist = localStorage.getItem("todolist");
-    if (todolist) {
-      return JSON.parse(todolist);
-    } else {
-      return [];
+  // Get Data from localStorage
+  function getData(){
+    const TodoList = localStorage.getItem("todoList");
+    if(TodoList){
+      return JSON.parse(TodoList)
+    }
+    else{
+      return []
     }
   }
 
-  const [TodoList, setTodoList] = useState(getLocalData());
+  // Local State
+  const [TodoList, setTodoList] = useState(getData());
   const [InputTask, setInputTask] = useState("");
   const [ToggleBtn, setToggleBtn] = useState(true);
-  const [EditItem, setEditItem] = useState(null);
+  const [ItemId, setItemId] = useState(null);
 
-  // Add Task to the TodoList
-  const handleAdd = (event) => {
-    event.preventDefault();
-    const Task = {
+  // Adds a Task
+  const handleAdd = (e) => {
+    e.preventDefault();
+    const task = {
       id: Date.now(),
-      name: InputTask,
-    };
-    if (!InputTask) {
-      alert("Please Fill the Data");
+      name: InputTask
     }
-    else if (InputTask && !ToggleBtn) {
-      const editTask = TodoList.map((elem) => {
-        if (elem.id === EditItem) {
-          return { ...elem, name: InputTask }
+    if(InputTask){
+      setTodoList([...TodoList, task])
+      setInputTask("")
+    }
+    else{
+      alert("Please Enter some Task")
+    }
+  };
+
+  // Edit a Task
+  const handleEdit = () => {
+    if(InputTask && !ToggleBtn){
+      const editTask = TodoList.map(item => {
+        if(item.id == ItemId){
+          return {...item, name: InputTask}
         }
-        return elem;
+        return item
       })
-      setTodoList(editTask);
-      setToggleBtn(true);
-      setEditItem(null);
-      setInputTask("");
+      setTodoList(editTask)
+      setToggleBtn(true)
+      setItemId(null)
+      setInputTask("")
     }
-    else {
-      setTodoList([...TodoList, Task]);
-      setInputTask("");
-    }
-  };
+  }
 
-  // Deletes the Task
+  // Delete a Task
   const handleDelete = (id) => {
-    const deleteTask = TodoList.filter((elem) => elem.id !== id)
-    setTodoList(deleteTask)
+    const updatedTodoList = TodoList.filter(item => item.id !== id)
+    setTodoList(updatedTodoList)
   };
 
-  // Clears all the Data
+  // Clears all the Task
   const handleClear = () => {
     setTodoList([])
   };
 
   // Handle Edit Task
-  const handleEdit = (id) => {
-    const itemtoFind = TodoList.find((elem) => elem.id === id);
-    setToggleBtn(false);
-    setInputTask(itemtoFind.name);
-    setEditItem(id);
+  const handleEnableEdit = (id) => {
+    const findTask = TodoList.find(item => item.id === id)
+    setInputTask(findTask.name)
+    setToggleBtn(false)
+    setItemId(id)
   };
 
   // Add Data to the localStorage
   useEffect(() => {
-    localStorage.setItem("todolist", JSON.stringify(TodoList));
-  }, [TodoList]);
-
+    localStorage.setItem("todoList", JSON.stringify(TodoList))
+  }, [TodoList])
   return (
     <>
       <div className="wrapper">
@@ -97,7 +101,7 @@ function Todo() {
                 <AiOutlinePlusCircle />
               </button>
             ) : (
-              <button type="submit" onClick={handleAdd} title="Edit Task">
+              <button type="submit" onClick={handleEdit} title="Edit Task">
                 <RiEditCircleLine />
               </button>
             )}
@@ -114,7 +118,7 @@ function Todo() {
               <li className="TodoItem" key={item.id}>
                 <span>{item.name}</span>
                 <div className="buttons">
-                  <button onClick={() => handleEdit(item.id)}>
+                  <button onClick={() => handleEnableEdit(item.id)}>
                     <AiFillEdit />
                   </button>
                   <button onClick={() => handleDelete(item.id)}>
